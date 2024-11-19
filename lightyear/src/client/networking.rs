@@ -140,6 +140,9 @@ pub(crate) fn receive_packets(
     component_registry: Res<ComponentRegistry>,
     message_registry: Res<MessageRegistry>,
     system_change_tick: SystemChangeTick,
+
+    mut error_timeout: Local<u32>,
+    mut error_events: EventWriter<ErrorEvent>,
 ) {
     trace!("Receive server packets");
     let delta = virtual_time.delta();
@@ -148,9 +151,20 @@ pub(crate) fn receive_packets(
     trace!(time = ?time_manager.current_time(), tick = ?tick_manager.tick(), "receive");
 
     if !matches!(netclient.state(), ConnectionState::Disconnected { .. }) {
-        let _ = netclient.try_update(delta.as_secs_f64()).map_err(|e| {
-            error!("Error updating netcode: {}", e);
-        });
+        match netclient.try_update(delta.as_secs_f64()) {
+            Ok => {
+                *error_timeout = 0;
+            },
+            Err(error) => {
+                *error_timeout += 1;
+                if *error_timeout > 100 {  // !
+                    error_events.send(ErrorEvent);
+                }
+            },
+        }
+        // let _ = netclient.try_update(delta.as_secs_f64()).map_err(|e| {
+        //     error!("Error updating netcode: {}", e);
+        // });
     }
 
     if matches!(netclient.state(), ConnectionState::Connected) {

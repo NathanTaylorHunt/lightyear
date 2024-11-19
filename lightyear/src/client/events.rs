@@ -33,6 +33,7 @@ impl Plugin for ClientEventsPlugin {
             // EVENTS
             .add_event::<ConnectEvent>()
             .add_event::<DisconnectEvent>()
+            .add_event::<ErrorEvennt>()
             // PLUGIN
             .add_plugins(EventsPlugin::<ConnectionManager>::default());
     }
@@ -70,6 +71,10 @@ impl ConnectEvent {
 pub struct DisconnectEvent {
     pub reason: Option<DisconnectReason>,
 }
+
+
+#[derive(Event)]
+pub struct ErrorEvent;  // todo add info
 
 /// Bevy [`Event`] emitted on the client to indicate the user input for the tick
 pub type InputEvent<I> = crate::shared::events::components::InputEvent<I, ()>;
