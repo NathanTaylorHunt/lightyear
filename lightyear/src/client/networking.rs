@@ -9,7 +9,7 @@ use tracing::{error, trace};
 
 use crate::client::config::ClientConfig;
 use crate::client::connection::ConnectionManager;
-use crate::client::events::{ConnectEvent, DisconnectEvent};
+use crate::client::events::{ConnectEvent, DisconnectEvent, ErrorEvent};
 use crate::client::interpolation::Interpolated;
 use crate::client::io::ClientIoEvent;
 use crate::client::networking::utils::AppStateExt;
@@ -152,7 +152,7 @@ pub(crate) fn receive_packets(
 
     if !matches!(netclient.state(), ConnectionState::Disconnected { .. }) {
         match netclient.try_update(delta.as_secs_f64()) {
-            Ok => {
+            Ok(_) => {
                 *error_timeout = 0;
             },
             Err(error) => {
