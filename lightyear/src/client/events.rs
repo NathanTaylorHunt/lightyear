@@ -33,7 +33,7 @@ impl Plugin for ClientEventsPlugin {
             // EVENTS
             .add_event::<ConnectEvent>()
             .add_event::<DisconnectEvent>()
-            .add_event::<ErrorEvent>()
+            .add_event::<ErrorEvennt>()
             // PLUGIN
             .add_plugins(EventsPlugin::<ConnectionManager>::default());
     }
