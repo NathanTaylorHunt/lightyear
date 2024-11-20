@@ -28,7 +28,6 @@ webtransport = [
   "dep:xwt-core",
   "dep:xwt-web",
   "dep:web-sys",
-  "dep:ring",
   "dep:wasm-bindgen-futures",
 ]
 leafwing = ["dep:leafwing-input-manager"]
@@ -96,7 +95,7 @@ crossbeam-channel = { version = "0.5.8", features = [] }
 
 # metrics
 metrics = { version = "0.24", optional = true }
-metrics-util = { version = "0.15", optional = true }
+metrics-util = { version = "0.18", optional = true }
 metrics-tracing-context = { version = "0.17", optional = true }
 metrics-exporter-prometheus = { version = "0.15.1", optional = true, default-features = false, features = [
   "http-listener",
@@ -147,7 +146,6 @@ zstd = { version = "0.13.1", optional = true }
 
 [target."cfg(target_family = \"wasm\")".dependencies]
 console_error_panic_hook = { version = "0.1.7" }
-ring = { version = "0.17.8", optional = true, default-features = false }
 web-sys = { version = "0.3", optional = true, features = [
   "Document",
   "WebTransport",
@@ -185,6 +183,10 @@ tracing-subscriber = "0.3.17"
 bitvec = "1.0"
 approx = "0.5.1"
 
+[dev-dependencies.leafwing-input-manager]
+version = "*"
+# Used by tests.
+features = ["keyboard"]
 
 # docs.rs-specific configuration
 [package.metadata.docs.rs]
